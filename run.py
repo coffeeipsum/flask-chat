@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, redirect
 
 app = Flask(__name__)
 messages = []
@@ -23,6 +23,8 @@ def user(username):
 @app.route('/<username>/<message>')
 def send_message(username, message):
     """Create a new message and redirect back to the chat page"""
-    return "{0}: {1}".format(username, message)
+    add_messages(username, message)
+    return redirect(username)
+
 
 app.run(host=os.getenv('IP'), port=int(os.getenv('PORT')), debug=True)
