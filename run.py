@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from flask import Flask, redirect
+from flask import Flask, redirect, render_template
 
 app = Flask(__name__)
 messages = []
@@ -12,16 +12,15 @@ def add_messages(username, message):
     messages_dict = {"timestamp": now, "from": username, "message": message}
     messages.append(messages_dict)
 
-
 def get_all_messages():
-    """Get al of the messages and separate them by a `br`"""
+    """Get al of the messages and separate them by a `br` OR NOT on updated version"""
     return messages
 
 
 @app.route('/')
 def index():
     """Main page with instructions"""
-    return "To send a message use /USERNAME/MESSAGE"
+    return render_template("index.html")
 
 
 @app.route('/<username>')
@@ -35,5 +34,6 @@ def send_message(username, message):
     """Create a new message and redirect back to the chat page"""
     add_messages(username, message)
     return redirect(username)
+
 
 app.run(host=os.getenv('IP'), port=int(os.getenv('PORT')), debug=True)
