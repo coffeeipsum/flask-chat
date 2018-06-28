@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from flask import Flask, redirect, render_template
+from flask import Flask, redirect, render_template, request
 
 app = Flask(__name__)
 messages = []
@@ -13,20 +13,24 @@ def add_messages(username, message):
     messages.append(messages_dict)
 
 def get_all_messages():
-    """Get al of the messages and separate them by a `br` OR NOT on updated version"""
-    return messages
+    """Get al of the messages and separate them by a `br` now"""
+    return "<br>".join(messages)
 
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def index():
     """Main page with instructions"""
+    if request.method == "POST":
+        with open("data/users.txt", "a") as user_list:
+            user_list.write(request.form["username"])
+        return redirect(request.form["username"])
     return render_template("index.html")
 
 
 @app.route('/<username>')
 def user(username):
-    """Display chat messages"""
-    return "<h1>Welcome, {0}</h1> {1}".format(username, messages)
+    """Display chat messages   TODO: KEEP `get_all_messages` """
+    return "<h1>Welcome, {0}</h1> {1}".format(username, get_all_messages())
 
 
 @app.route('/<username>/<message>')
