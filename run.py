@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from flask import Flask, redirect, render_template, request
+from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__)
 messages = [ ]
@@ -34,7 +34,6 @@ def user(username):
     messages = get_all_messages()
     return render_template("chat.html",
                             username=username, chat_messages=messages)
-
 
 @app.route('/<username>/<message>')
 def send_message(username, message):
